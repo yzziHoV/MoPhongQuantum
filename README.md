@@ -31,4 +31,5 @@
 
 4. Bấm F5 hoặc nút Play xanh lá để chạy ứng dụng trên trình duyệt (localhost).
 
-<img width="1917" height="958" alt="image" src="https://github.com/user-attachments/assets/7fd6b993-930a-415c-b226-8498a7e6c5dc" />
+<img width="1917" height="957" alt="image" src="https://github.com/user-attachments/assets/534ac46d-10b1-4a43-a40a-7f1f3f5ab911" />
+
