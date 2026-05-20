@@ -1,0 +1,515 @@
+﻿@{
+    ViewData["Title"] = "Kết Quả Mô Phỏng";
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    body {
+        background-color: #0a0a0a;
+        color: #f5f5f5;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .luxury-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        background: #151515;
+        padding: 40px;
+        border-radius: 12px;
+        border-top: 4px solid #e50914;
+        box-shadow: 0 15px 35px rgba(229, 9, 20, 0.2);
+    }
+
+    h2 {
+        text-align: center;
+        color: #e50914;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 25px;
+        font-weight: bold;
+    }
+
+    /* BỘ ĐIỀU KHIỂN */
+    .control-panel {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .btn-speed {
+        background: #222;
+        color: #888;
+        border: 1px solid #333;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .btn-speed:hover, .btn-speed.active {
+            background: #e50914;
+            color: #fff;
+            border-color: #e50914;
+            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
+        }
+
+    /* BIỂU ĐỒ GANTT */
+    .gantt-title {
+        font-size: 13px;
+        color: #666;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        border-left: 3px solid #e50914;
+        padding-left: 10px;
+    }
+
+    .gantt-container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        background: #0d0d0d;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        min-height: 100px;
+        border: 1px solid #222;
+    }
+
+    .gantt-block {
+        opacity: 0;
+        transform: scale(0.8);
+        background: linear-gradient(135deg, #e50914, #91060d);
+        color: white;
+        padding: 15px;
+        margin: 5px;
+        border-radius: 6px;
+        font-weight: bold;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+        .gantt-block.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .gantt-block.idle {
+            background: #333;
+            color: #666;
+            border: 1px dashed #444;
+        }
+
+    .gantt-time {
+        font-size: 11px;
+        color: rgba(255,255,255,0.6);
+        margin-top: 5px;
+        display: block;
+    }
+
+    /* BẢNG & BIỂU ĐỒ CHART.JS */
+    #result-section {
+        display: none;
+        opacity: 0;
+        transition: opacity 1s ease;
+    }
+
+    .summary-cards {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        gap: 20px;
+    }
+
+    .card {
+        background: #1a1a1a;
+        padding: 25px;
+        border-radius: 8px;
+        flex: 1;
+        text-align: center;
+        border-bottom: 4px solid #e50914;
+    }
+
+        .card h4 {
+            color: #888;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .card .value {
+            color: #fff;
+            font-size: 36px;
+            font-weight: 800;
+            text-shadow: 0 0 10px rgba(229, 9, 20, 0.3);
+        }
+
+    .chart-box {
+        background: #1a1a1a;
+        padding: 25px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        border: 1px solid #222;
+        height: 350px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+        background: #0d0d0d;
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: center;
+        border-bottom: 1px solid #222;
+    }
+
+    th {
+        color: #e50914;
+        text-transform: uppercase;
+        font-weight: bold;
+        border-bottom: 2px solid #e50914;
+    }
+
+    /* NÚT CHỨC NĂNG */
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 14px 25px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: 0.3s;
+        border: none;
+        font-size: 13px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-back {
+        background: transparent;
+        color: #e50914;
+        border: 2px solid #e50914;
+    }
+
+        .btn-back:hover {
+            background: #e50914;
+            color: #fff;
+        }
+
+    .btn-guide {
+        background: #242424;
+        color: #fff;
+        border: 2px solid #444;
+    }
+
+        .btn-guide:hover {
+            border-color: #e50914;
+            color: #e50914;
+        }
+
+    .btn-download {
+        background: #2ecc71;
+        color: #111;
+        border: 2px solid #2ecc71;
+    }
+
+        .btn-download:hover {
+            background: #27ae60;
+            border-color: #27ae60;
+            color: #fff;
+        }
+
+    /* HƯỚNG DẪN GIẢI */
+    .guide-section {
+        display: none;
+        background: #111;
+        padding: 30px;
+        border-radius: 8px;
+        margin-top: 30px;
+        border: 1px solid #222;
+        text-align: left;
+    }
+
+        .guide-section h4 {
+            color: #fff;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+    .guide-step {
+        border-left: 3px solid #e50914;
+        padding: 15px;
+        background: #1a1a1a;
+        margin-bottom: 10px;
+        color: #ccc;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .guide-formula {
+        background: #0a0a0a;
+        padding: 15px;
+        border-radius: 4px;
+        font-family: 'Consolas', monospace;
+        color: #2ecc71;
+        margin-bottom: 15px;
+        border: 1px dashed #444;
+    }
+
+    .guide-highlight {
+        color: #fff;
+        font-weight: bold;
+    }
+
+        .guide-highlight.red {
+            color: #e50914;
+        }
+</style>
+
+<div class="luxury-container" id="capture-area">
+    <h2>Trực Quan Thuật Toán Round Robin</h2>
+
+    <div class="control-panel" data-html2canvas-ignore="true">
+        <button class="btn-speed active" id="btn-1x" onclick="playAnimation(1, this)">▶ Bình Thường</button>
+        <button class="btn-speed" id="btn-2x" onclick="playAnimation(0.4, this)">⏩ Tua Nhanh (x2)</button>
+        <button class="btn-speed" id="btn-skip" onclick="playAnimation(0, this)">⏭ Xem Kết Quả Ngay</button>
+    </div>
+
+    <p class="gantt-title">Biểu đồ Gantt điều phối CPU (Quantum = @ViewBag.Quantum ms)</p>
+    <div class="gantt-container" id="gantt-chart"></div>
+
+    <div id="result-section">
+        @{
+            int n = ViewBag.SoTienTrinh;
+            var at = ViewBag.ArrivalTimes as List<int>;
+            var bt = ViewBag.BurstTimes as List<int>;
+            var wt = ViewBag.WaitingTimes as int[];
+            var tat = ViewBag.TurnaroundTimes as int[];
+            float avgWt = 0, avgTat = 0;
+            for (int i = 0; i < n; i++) { avgWt += wt[i]; avgTat += tat[i]; }
+            avgWt /= n; avgTat /= n;
+        }
+
+        <div class="summary-cards">
+            <div class="card"><h4>Thời Gian Chờ Trung Bình</h4><div class="value">@avgWt.ToString("0.00") ms</div></div>
+            <div class="card"><h4>Thời Gian Hoàn Thành Trung Bình</h4><div class="value">@avgTat.ToString("0.00") ms</div></div>
+        </div>
+
+        <p class="gantt-title">Phân tích hiệu suất (Waiting Time vs Turnaround Time)</p>
+        <div class="chart-box">
+            <canvas id="performanceChart"></canvas>
+        </div>
+
+        <table>
+            <thead><tr><th>Tiến Trình</th><th>Arrival Time</th><th>Burst Time</th><th>Waiting Time</th><th>Turnaround Time</th></tr></thead>
+            <tbody>
+                @for (int i = 0; i < n; i++)
+                {
+                    <tr><td style="color:#e50914; font-weight:bold;">P@(i + 1)</td><td>@at[i]</td><td>@bt[i]</td><td>@wt[i]</td><td>@tat[i]</td></tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="action-buttons" data-html2canvas-ignore="true">
+            <a href="/Home/Index" class="btn-action btn-back">⬅ THIẾT LẬP BÀI MỚI</a>
+            <button class="btn-action btn-guide" onclick="toggleGuide()">📖 HƯỚNG DẪN GIẢI</button>
+            <button class="btn-action btn-download" onclick="captureScreen()">📸 TẢI ẢNH KẾT QUẢ</button>
+        </div>
+
+        <div id="guide-section" class="guide-section">
+            <h3 style="color:#e50914; margin-bottom:10px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:10px;">📖 Hướng Dẫn Giải Chi Tiết</h3>
+
+            <h4>1. Trình tự cấp phát CPU</h4>
+            <div id="guide-steps-container"></div>
+
+            <h4>2. Tính Thời Gian Hoàn Thành (Turnaround Time - TAT)</h4>
+            <div class="guide-formula">Công thức: TAT = Thời điểm kết thúc - Arrival Time (Thời gian đến)</div>
+            @for (int i = 0; i < n; i++)
+            {
+                <div class="guide-step">
+                    Tiến trình <span class="guide-highlight">P@(i + 1)</span> kết thúc lúc <span class="guide-highlight">@(tat[i] + at[i])ms</span>, đến lúc <span class="guide-highlight">@(at[i])ms</span>
+                    <br />➔ TAT = @(tat[i] + at[i]) - @(at[i]) = <span class="guide-highlight red">@(tat[i]) ms</span>
+                </div>
+            }
+
+            <h4>3. Tính Thời Gian Chờ (Waiting Time - WT)</h4>
+            <div class="guide-formula">Công thức: WT = TAT - Burst Time (Thời gian chạy)</div>
+            @for (int i = 0; i < n; i++)
+            {
+                <div class="guide-step">
+                    Tiến trình <span class="guide-highlight">P@(i + 1)</span> có TAT = <span class="guide-highlight">@(tat[i])</span>, Burst Time = <span class="guide-highlight">@(bt[i])</span>
+                    <br />➔ WT = @(tat[i]) - @(bt[i]) = <span class="guide-highlight red">@(wt[i]) ms</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    const steps = @Html.Raw(ViewBag.Steps);
+
+    // Đổ dữ liệu C# sang JS để vẽ Chart
+    const labels = [];
+    const wtData = [];
+    const tatData = [];
+    @for (int i = 0; i < n; i++)
+    {
+            @:labels.push("P@(i + 1)");
+            @:wtData.push(@wt[i]);
+            @:tatData.push(@tat[i]);
+    }
+
+    const ganttContainer = document.getElementById('gantt-chart');
+    const resultSection = document.getElementById('result-section');
+    let activeTimeouts = [];
+    let myChart = null;
+
+    // Logic 1: Vẽ 1 khối tiến trình
+    function createBlock(s, showImmediately) {
+        const b = document.createElement('div');
+        b.className = 'gantt-block' + (s.Process === 'IDLE' ? ' idle' : '') + (showImmediately ? ' show' : '');
+        b.style.width = (s.Duration * 25 + 40) + 'px';
+        let label = s.Process === 'IDLE' ? 'Trống' : s.Process;
+        b.innerHTML = `<span>${label}</span><span class="gantt-time">${s.Start} - ${s.End}</span>`;
+        return b;
+    }
+
+    // Logic 2: Điều khiển tốc độ chạy
+    function playAnimation(speedMultiplier, btnElement) {
+        document.querySelectorAll('.btn-speed').forEach(b => b.classList.remove('active'));
+        if(btnElement) btnElement.classList.add('active');
+
+        activeTimeouts.forEach(t => clearTimeout(t));
+        activeTimeouts = [];
+        ganttContainer.innerHTML = '';
+        resultSection.style.display = 'none';
+        resultSection.style.opacity = '0';
+        document.getElementById('guide-section').style.display = 'none';
+
+        if(speedMultiplier === 0) {
+            steps.forEach(s => ganttContainer.appendChild(createBlock(s, true)));
+            finishRender();
+            return;
+        }
+
+        let delay = 0;
+        const baseDelay = 800 * speedMultiplier;
+        steps.forEach((s, i) => {
+            let t = setTimeout(() => {
+                let block = createBlock(s, false);
+                ganttContainer.appendChild(block);
+                setTimeout(() => block.classList.add('show'), 20);
+                if(i === steps.length - 1) setTimeout(finishRender, baseDelay);
+            }, delay);
+            activeTimeouts.push(t);
+            delay += baseDelay;
+        });
+    }
+
+    // Logic 3: Khi chạy xong Gantt thì hiện bảng kết quả và vẽ Chart
+    function finishRender() {
+        resultSection.style.display = 'block';
+        setTimeout(() => {
+            resultSection.style.opacity = '1';
+            renderChart();
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }, 100);
+    }
+
+    // Logic 4: Vẽ biểu đồ Chart.js
+    function renderChart() {
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        if(myChart) myChart.destroy();
+        myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'Waiting Time (ms)', data: wtData, backgroundColor: '#555', borderColor: '#777', borderWidth: 1, borderRadius: 4 },
+                    { label: 'Turnaround Time (ms)', data: tatData, backgroundColor: '#e50914', borderColor: '#ff4d4d', borderWidth: 1, borderRadius: 4 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#222' }, ticks: { color: '#888' } },
+                    x: { grid: { display: false }, ticks: { color: '#ccc', font: { weight: 'bold' } } }
+                },
+                plugins: {
+                    legend: { labels: { color: '#ccc', font: { family: 'Inter', size: 13 } } }
+                }
+            }
+        });
+    }
+
+    // Logic 5: Bật/Tắt hướng dẫn giải
+    function toggleGuide() {
+        const g = document.getElementById('guide-section');
+        const c = document.getElementById('guide-steps-container');
+        if(g.style.display === 'block') {
+            g.style.display = 'none';
+            return;
+        }
+
+        // Chỉ nạp nội dung giải thích các bước chạy khi người dùng bật lần đầu
+        if(c.innerHTML.trim() === '') {
+            c.innerHTML = steps.map(s => {
+                let desc = s.Process === 'IDLE'
+                    ? `<span style="color:#888;">CPU rảnh rỗi (Không có tiến trình trong hàng đợi).</span>`
+                    : `Cấp CPU cho <span class="guide-highlight red">${s.Process}</span> chạy trong ${s.Duration}ms.`;
+                return `<div class="guide-step">Tại mốc <span class="guide-highlight">${s.Start}ms</span>: ${desc} (Kết thúc lúc ${s.End}ms)</div>`;
+            }).join('');
+        }
+
+        g.style.display = 'block';
+        setTimeout(() => g.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+
+    // Logic 6: Chụp ảnh bằng html2canvas + SweetAlert2
+    function captureScreen() {
+        Swal.fire({
+            title: 'Đang xử lý ảnh...',
+            text: 'Vui lòng chờ hệ thống xuất file chất lượng cao',
+            background: '#151515', color: '#fff',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        html2canvas(document.getElementById('capture-area'), {
+            backgroundColor: '#0a0a0a', scale: 2
+        }).then(canvas => {
+            Swal.close();
+            const link = document.createElement('a');
+            link.download = 'PhanTich_RoundRobin.png';
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+            Swal.fire({ icon: 'success', title: 'Hoàn tất!', text: 'Ảnh đã lưu về máy.', background: '#151515', color: '#fff', confirmButtonColor: '#2ecc71' });
+        });
+    }
+
+    // Chạy mặc định 1x khi load trang
+    window.onload = () => playAnimation(1, document.getElementById('btn-1x'));
+</script>

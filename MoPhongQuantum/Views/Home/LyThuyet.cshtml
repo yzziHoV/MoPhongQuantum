@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Lý Thuyết Round Robin";
+}
+
+<style>
+    .theory-container {
+        max-width: 900px;
+        margin: 30px auto;
+        background: #1e1e1e;
+        padding: 40px 50px;
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(229, 9, 20, 0.15);
+        border-top: 4px solid #e50914;
+        line-height: 1.7;
+    }
+
+        .theory-container h2 {
+            color: #e50914;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .theory-container h3 {
+            color: #fff;
+            border-left: 4px solid #e50914;
+            padding-left: 15px;
+            margin-top: 40px;
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .theory-container p, .theory-container li {
+            color: #cccccc;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        .theory-container ul {
+            margin-bottom: 25px;
+        }
+
+    .highlight {
+        color: #e50914;
+        font-weight: bold;
+    }
+
+    .formula-box {
+        background: #151515;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #333;
+        text-align: center;
+        margin: 20px 0;
+    }
+
+        .formula-box code {
+            color: #ffcccc;
+            font-size: 16px;
+            font-family: Consolas, monospace;
+        }
+</style>
+
+<div class="theory-container">
+    <h2>Cơ Sở Lý Thuyết: Thuật Toán Round Robin</h2>
+
+    <h3>1. Giới thiệu chung</h3>
+    <p>Thuật toán định thời <strong>Round Robin (RR)</strong> là một trong những thuật toán phân phối CPU phổ biến và công bằng nhất, được thiết kế đặc biệt cho các hệ thống đa nhiệm chia sẻ thời gian (time-sharing systems).</p>
+    <p>Nguyên lý hoạt động của nó tương tự như thuật toán FCFS (Vào trước - Ra trước) nhưng được bổ sung thêm tính năng <span class="highlight">trưng dụng (preemption)</span> để Hệ điều hành có thể luân chuyển quyền sử dụng CPU liên tục giữa các tiến trình.</p>
+
+    <h3>2. Lát cắt thời gian (Time Quantum) là gì?</h3>
+    <p>Hệ điều hành sẽ định nghĩa một định mức thời gian nhỏ gọi là <span class="highlight">Time Quantum (q)</span> (thường dao động từ 10 đến 100 mili-giây). Danh sách các tiến trình cần xử lý sẽ được sắp xếp thành một vòng tròn.</p>
+    <ul>
+        <li>Bộ điều phối CPU sẽ đi vòng quanh hàng đợi, cấp phát CPU cho mỗi tiến trình chạy trong một khoảng thời gian tối đa bằng đúng 1 Quantum.</li>
+        <li>Nếu tiến trình có thời gian cần chạy (Burst Time) <strong>nhỏ hơn</strong> 1 Quantum: Nó sẽ tự động nhả CPU ra ngay khi hoàn thành sớm.</li>
+        <li>Nếu tiến trình có Burst Time <strong>lớn hơn</strong> 1 Quantum: Hết thời gian cho phép, Hệ điều hành sẽ tước quyền CPU của nó, đẩy nó về cuối hàng đợi và chuyển CPU cho tiến trình tiếp theo.</li>
+    </ul>
+
+    <h3>3. Các công thức đánh giá hiệu năng</h3>
+    <p>Để đánh giá mức độ hiệu quả của việc điều phối, chúng ta sử dụng hai thông số chính:</p>
+
+    <div class="formula-box">
+        <code>Thời Gian Hoàn Thành (Turnaround Time) = Thời điểm hoàn thành - Thời điểm xuất hiện</code><br /><br />
+        <code>Thời Gian Chờ (Waiting Time) = Thời Gian Hoàn Thành - Thời Gian Chạy (Burst Time)</code>
+    </div>
+
+    <h3>4. Đánh giá ưu và nhược điểm</h3>
+    <ul>
+        <li><span class="highlight">Ưu điểm:</span> Đảm bảo tính công bằng cao, không có tiến trình nào bị "bỏ đói" (starvation) vì mọi tiến trình đều chắc chắn được cấp CPU theo chu kỳ. Rất phù hợp với hệ thống tương tác trực tiếp.</li>
+        <li><span class="highlight">Nhược điểm:</span> Hiệu suất phụ thuộc cực lớn vào việc chọn giá trị <strong>Time Quantum</strong>. Nếu Quantum quá lớn, RR sẽ bị biến thành FCFS. Nếu Quantum quá nhỏ, CPU sẽ tốn rất nhiều thời gian vô ích chỉ để chuyển đổi ngữ cảnh (Context Switch) giữa các tiến trình.</li>
+    </ul>
+</div>
