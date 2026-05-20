@@ -3,132 +3,155 @@
 }
 
 <style>
+    /* SỬ DỤNG BIẾN CSS ĐỂ ĐỒNG BỘ SÁNG/TỐI */
     .quiz-container {
         max-width: 800px;
         margin: 40px auto;
-        background: #1e1e1e;
+        background: var(--bg-card);
         padding: 40px;
         border-radius: 12px;
-        box-shadow: 0 15px 35px rgba(229, 9, 20, 0.15);
-        border-top: 4px solid #e50914;
+        box-shadow: 0 15px 35px var(--shadow-color);
+        border-top: 4px solid var(--primary-red);
+        transition: 0.4s ease;
     }
 
         .quiz-container h2 {
-            color: #e50914;
+            color: var(--primary-red);
             text-align: center;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 30px;
+            font-weight: bold;
+            font-size: 22px;
         }
 
     .question-block {
-        background: #151515;
-        padding: 20px;
+        background: var(--bg-main);
+        padding: 25px;
         border-radius: 8px;
         margin-bottom: 25px;
-        border-left: 3px solid #444;
-        transition: 0.3s;
+        border-left: 3px solid var(--border-color);
+        transition: 0.4s ease;
+        border: 1px solid var(--border-color);
     }
 
     .question-title {
-        color: #fff;
-        font-size: 16px;
-        font-weight: bold;
+        color: var(--text-main);
+        font-size: 15px;
+        font-weight: 700;
         margin-bottom: 15px;
+        line-height: 1.5;
     }
 
     .option {
         display: block;
-        padding: 12px 15px;
+        padding: 14px 18px;
         margin-bottom: 10px;
-        background: #242424;
-        color: #ccc;
+        background: var(--bg-card);
+        color: var(--text-muted);
         border-radius: 6px;
         cursor: pointer;
         transition: 0.2s;
-        border: 1px solid transparent;
+        border: 1px solid var(--border-color);
+        font-weight: 500;
+        font-size: 14px;
     }
 
         .option:hover {
-            background: #2a2a2a;
-            border-color: #e50914;
+            border-color: var(--primary-red);
+            color: var(--text-main);
         }
 
         .option input[type="radio"] {
-            margin-right: 10px;
-            accent-color: #e50914;
+            margin-right: 12px;
+            accent-color: var(--primary-red);
+            cursor: pointer;
+            transform: scale(1.1);
         }
 
     /* Các class đổi màu khi chấm điểm */
     .correct-ans {
-        background: rgba(46, 204, 113, 0.2) !important;
+        background: rgba(46, 204, 113, 0.1) !important;
         border-color: #2ecc71 !important;
         color: #2ecc71 !important;
+        font-weight: bold;
     }
 
     .wrong-ans {
-        background: rgba(229, 9, 20, 0.2) !important;
-        border-color: #e50914 !important;
-        color: #e50914 !important;
+        background: rgba(194, 24, 91, 0.1) !important;
+        border-color: var(--primary-red) !important;
+        color: var(--primary-red) !important;
+        font-weight: bold;
     }
 
     .btn-submit {
         display: block;
         width: 100%;
-        padding: 15px;
-        background: linear-gradient(135deg, #e50914, #b20710);
+        padding: 16px;
+        background: var(--primary-red);
         color: white;
         border: none;
         border-radius: 6px;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: bold;
         cursor: pointer;
         text-transform: uppercase;
         margin-top: 30px;
         transition: 0.3s;
+        letter-spacing: 1px;
     }
 
         .btn-submit:hover {
-            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
+            filter: brightness(1.1);
+            box-shadow: 0 5px 15px var(--shadow-color);
+            transform: translateY(-2px);
         }
 
     #result-box {
         display: none;
         margin-top: 30px;
         text-align: center;
-        padding: 30px;
-        background: #111;
+        padding: 35px;
+        background: var(--bg-main);
         border-radius: 8px;
-        border: 2px dashed #e50914;
+        border: 2px dashed var(--primary-red);
+        transition: 0.4s ease;
     }
 
     #score-text {
-        font-size: 24px;
-        font-weight: bold;
-        color: #fff;
-        margin-bottom: 20px;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-main);
+        margin-bottom: 15px;
+        text-transform: uppercase;
     }
 
         #score-text span {
-            color: #e50914;
-            font-size: 40px;
+            color: var(--primary-red);
+            font-size: 45px;
+            font-weight: 800;
+            display: block;
+            margin-top: 10px;
         }
 
     .btn-retry {
         display: inline-block;
-        padding: 12px 25px;
+        padding: 14px 25px;
         background: transparent;
-        border: 2px solid #e50914;
-        color: #e50914;
+        border: 2px solid var(--primary-red);
+        color: var(--primary-red);
         border-radius: 6px;
         font-weight: bold;
         cursor: pointer;
         transition: 0.3s;
         text-transform: uppercase;
+        margin-top: 20px;
+        font-size: 13px;
+        letter-spacing: 1px;
     }
 
         .btn-retry:hover {
-            background: #e50914;
+            background: var(--primary-red);
             color: #fff;
         }
 </style>
@@ -141,35 +164,30 @@
     <button class="btn-submit" id="btn-submit" onclick="checkAnswers()">Nộp Bài & Chấm Điểm</button>
 
     <div id="result-box">
-        <div id="score-text">Bạn đạt: <br /> <span>0</span> / 4 điểm</div>
-        <p style="color: #aaa; margin-bottom: 20px;">Vui lòng xem lại các câu bị đánh dấu đỏ ở phía trên!</p>
-        <button class="btn-retry" onclick="loadRandomQuestions()">Làm Lại & Trộn Câu Hỏi Khác 🔄</button>
+        <div id="score-text">Kết Quả Bài Làm <br /> <span>0 / 4</span></div>
+        <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">Vui lòng xem lại các câu bị đánh dấu đỏ ở phía trên!</p>
+        <button class="btn-retry" onclick="loadRandomQuestions()">🔄 Làm Lại & Đổi Bộ Đề Khác</button>
     </div>
 </div>
 
 <script>
-     // 1. NGÂN HÀNG 35 CÂU HỎI HỆ ĐIỀU HÀNH & LINUX
+    // 1. NGÂN HÀNG 35 CÂU HỎI HỆ ĐIỀU HÀNH & LINUX
     const questionBank = [
-        // --- NHÓM LÝ THUYẾT THUẬT TOÁN ĐỊNH THỜI ---
         { q: "Lát cắt thời gian (Time Quantum) là tham số cốt lõi của thuật toán định thời nào?", opts: { A: "FCFS", B: "Round Robin (Phân phối xoay vòng)", C: "SJF" }, ans: "B" },
         { q: "Điều gì xảy ra nếu giá trị Time Quantum được thiết lập quá lớn (gần bằng vô cùng)?", opts: { A: "Thuật toán RR sẽ biến thành thuật toán FCFS", B: "Tốn thời gian Context Switch", C: "Hệ thống bị treo" }, ans: "A" },
-        { q: "Ưu điểm lớn nhất của thuật toán Round Robin là gì?", opts: { A: "Thời gian chờ trung bình luôn nhỏ nhất", B: "Không có tiến trình nào bị 'bỏ đói' (starvation), đảm bảo tính công bằng", C: "Sử dụng ít bộ nhớ nhất" }, ans: "B" },
+        { q: "Ưu điểm lớn nhất của thuật toán Round Robin là gì?", opts: { A: "Thời gian chờ trung bình luôn nhỏ nhất", B: "Không có tiến trình nào bị 'bỏ đói', đảm bảo tính công bằng", C: "Sử dụng ít bộ nhớ nhất" }, ans: "B" },
         { q: "Thời gian chờ (Waiting Time) của một tiến trình được tính bằng công thức nào?", opts: { A: "Thời điểm hoàn thành - Thời điểm xuất hiện", B: "Thời gian lưu lại hệ thống (Turnaround Time) - Thời gian chạy (Burst Time)", C: "Burst Time - Time Quantum" }, ans: "B" },
-
-        // --- NHÓM QUẢN LÝ TIẾN TRÌNH (FORK, WAIT, EXEC) ---
         { q: "Trong Linux, hàm nào được sử dụng để nhân bản (tạo bản sao mới) của một tiến trình?", opts: { A: "system()", B: "exec()", C: "fork()" }, ans: "C" },
         { q: "Khi gọi hàm fork() thành công, giá trị trả về bên trong tiến trình con (child process) là bao nhiêu?", opts: { A: "0", B: "1", C: "PID của tiến trình cha" }, ans: "A" },
         { q: "Khi gọi hàm fork() thành công, giá trị trả về bên trong tiến trình cha (parent process) là bao nhiêu?", opts: { A: "0", B: "PID của tiến trình con vừa được tạo", C: "-1" }, ans: "B" },
         { q: "Nếu hàm fork() thất bại (không thể tạo tiến trình mới), nó sẽ trả về giá trị nào?", opts: { A: "0", B: "1", C: "-1" }, ans: "C" },
         { q: "Hàm wait() có vai trò gì khi tiến trình cha và con đang cùng hoạt động?", opts: { A: "Đưa tiến trình cha vào trạng thái ngủ", B: "Bắt tiến trình cha phải dừng lại chờ tiến trình con kết thúc", C: "Hủy bỏ tiến trình con ngay lập tức" }, ans: "B" },
         { q: "Các hàm exec() trong Linux có tác dụng gì?", opts: { A: "Thay thế toàn bộ ảnh của tiến trình hiện tại thành ảnh của tiến trình mới", B: "Tạo ra một tiến trình con chạy song song", C: "Tạm dừng tiến trình hiện tại" }, ans: "A" },
-        { q: "Hàm system() khác gì so với các hàm exec()?", opts: { A: "system() gọi shell thực thi lệnh và chờ lệnh kết thúc mới quay về, không thay thế tiến trình hiện tại", B: "system() chạy nhanh hơn exec()", C: "system() chỉ dùng được cho lệnh ls" }, ans: "A" },
+        { q: "Hàm system() khác gì so với các hàm exec()?", opts: { A: "system() gọi shell thực thi lệnh và chờ lệnh kết thúc mới quay về, không thay thế tiến trình", B: "system() chạy nhanh hơn exec()", C: "system() chỉ dùng được cho lệnh ls" }, ans: "A" },
         { q: "Macro nào được dùng cùng với hàm wait() để kiểm tra xem tiến trình con có kết thúc bình thường hay không?", opts: { A: "WEXITSTATUS", B: "WIFSIGNALED", C: "WIFEXITED" }, ans: "C" },
-        { q: "Mỗi tiến trình trong Linux được cấp phát không gian địa chỉ bộ nhớ phẳng là bao nhiêu?", opts: { A: "2GB", B: "4GB", C: "8GB" }, ans: "B" },
-        { q: "Tiến trình đầu tiên được khởi động cùng hệ điều hành Linux, có PID bằng 1 tên là gì?", opts: { A: "bash", B: "root", C: "init" }, ans: "C" },
+        { q: "Mỗi tiến trình trong Linux được cấp phát không gian địa chỉ bộ nhớ phẳng là bao nhiêu (trên hệ thống 32-bit)?", opts: { A: "2GB", B: "4GB", C: "8GB" }, ans: "B" },
+        { q: "Tiến trình đầu tiên được khởi động cùng hệ điều hành Linux, có PID bằng 1 tên là gì?", opts: { A: "bash", B: "root", C: "init (hoặc systemd)" }, ans: "C" },
         { q: "PPID (Parent PID) là thông số mang ý nghĩa gì?", opts: { A: "Số định danh của tiến trình cha", B: "Thời gian chiếm dụng CPU của tiến trình", C: "Độ ưu tiên của tiến trình" }, ans: "A" },
-
-        // --- NHÓM LỆNH CƠ BẢN LINUX ---
         { q: "Lệnh nào được dùng để hiển thị thông tin chi tiết về các tiến trình đang chạy (PID, TTY, CMD...)?", opts: { A: "ps", B: "ls", C: "cat" }, ans: "A" },
         { q: "Phím tắt hoặc cú pháp nào dùng để tạm dừng một chương trình và đưa nó vào hoạt động phía hậu trường (background)?", opts: { A: "Ctrl + C", B: "Ctrl + Z hoặc thêm ký tự & cuối lệnh", C: "Ctrl + D" }, ans: "B" },
         { q: "Lệnh nào dùng để tạo ra một thư mục mới trong Linux?", opts: { A: "mkdir", B: "rmdir", C: "touch" }, ans: "A" },
@@ -180,8 +198,6 @@
         { q: "Lệnh cat thường được sử dụng để làm gì?", opts: { A: "Xem nội dung của một tập tin văn bản ngắn", B: "Xem danh sách thư mục", C: "Xem dung lượng ổ đĩa" }, ans: "A" },
         { q: "Để đóng gói và nén các tập tin thành đuôi .tar, cú pháp cơ bản là gì?", opts: { A: "tar -xvf", B: "tar -cvf", C: "tar -z" }, ans: "B" },
         { q: "Đường dẫn tuyệt đối (Absolute Path) trong hệ thống tập tin Linux luôn bắt đầu bằng ký tự nào?", opts: { A: "~", B: "/", C: "." }, ans: "B" },
-
-        // --- NHÓM LẬP TRÌNH C & THƯ VIỆN TRÊN LINUX ---
         { q: "Trình biên dịch mặc định phổ biến nhất dùng cho ngôn ngữ C/C++ trên Linux là gì?", opts: { A: "visual studio", B: "gcc", C: "javac" }, ans: "B" },
         { q: "Để trình biên dịch gcc chỉ tạo ra tập tin đối tượng (object file đuôi .o) mà chưa tạo file thực thi, ta dùng tùy chọn nào?", opts: { A: "-c", B: "-o", C: "-l" }, ans: "A" },
         { q: "Trong Linux, các tập tin thư viện liên kết tĩnh (static library) thường có phần mở rộng (đuôi) là gì?", opts: { A: ".so", B: ".dll", C: ".a" }, ans: "C" },
@@ -198,15 +214,13 @@
 
     // 2. HÀM TẢI VÀ TRỘN CÂU HỎI
     function loadRandomQuestions() {
-        // Ẩn bảng điểm và hiện lại nút Nộp bài
         document.getElementById("result-box").style.display = "none";
         document.getElementById("btn-submit").style.display = "block";
 
-        // Trộn ngẫu nhiên ngân hàng câu hỏi và lấy 4 câu đầu tiên
+        // Trộn ngẫu nhiên và lấy 4 câu
         let shuffled = [...questionBank].sort(() => 0.5 - Math.random());
         currentQuestions = shuffled.slice(0, 4);
 
-        // Đổ HTML ra giao diện
         const container = document.getElementById("quiz-questions-container");
         container.innerHTML = "";
 
@@ -222,7 +236,6 @@
             container.innerHTML += html;
         });
 
-        // Cuộn lên đầu trang
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -246,7 +259,7 @@
                     block.style.borderLeftColor = "#2ecc71";
                 } else {
                     selected.parentElement.classList.add('wrong-ans');
-                    block.style.borderLeftColor = "#e50914";
+                    block.style.borderLeftColor = "var(--primary-red)";
 
                     options.forEach(opt => {
                         if(opt.querySelector('input').value === item.ans) {
@@ -255,7 +268,7 @@
                     });
                 }
             } else {
-                block.style.borderLeftColor = "#e50914";
+                block.style.borderLeftColor = "var(--primary-red)";
             }
 
             // Vô hiệu hóa nút chọn sau khi đã chấm
@@ -263,16 +276,15 @@
             radios.forEach(radio => radio.disabled = true);
         });
 
-        // Hiện điểm và nút làm lại
+        // Hiện điểm
         let resultBox = document.getElementById("result-box");
-        document.querySelector("#score-text span").innerText = score;
+        document.querySelector("#score-text span").innerText = score + " / 4";
         resultBox.style.display = "block";
         document.getElementById("btn-submit").style.display = "none";
 
-        // Cuộn xuống xem kết quả
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
-    // Chạy ngay hàm trộn câu hỏi khi vừa vào web
+    // Chạy ngay khi vào web
     window.onload = loadRandomQuestions;
 </script>

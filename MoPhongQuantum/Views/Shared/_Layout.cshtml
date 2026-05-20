@@ -8,26 +8,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
+        /* 1. KHAI BÁO BIẾN MÀU - CẬP NHẬT CHẾ ĐỘ SÁNG PROFESSIONAL (MẶC ĐỊNH) */
         :root {
-            --bg-dark: #0a0a0a;
-            --bg-card: #151515;
-            --primary-red: #e50914;
-            --text-main: #f5f5f5;
-            --text-muted: #888;
+            --bg-main: #f8f9fa; /* Xám trắng tinh tế, dịu hơn */
+            --bg-card: #ffffff;
+            --text-main: #212529; /* Đen xám dễ đọc */
+            --text-muted: #495057; /* Xám đậm cho nội dung phụ */
+            --border-color: #dee2e6;
+            --primary-red: #c2185b; /* MÀU MỚI: Đỏ mận, sang trọng và dịu mắt trên nền sáng */
+            --shadow-color: rgba(0, 0, 0, 0.05); /* Bóng cực nhẹ */
+            /* Màu riêng cho nút chuyển theme ở chế độ sáng */
+            --toggle-bg: #e0e0e0;
+            --toggle-color: #1a1a1a;
         }
 
+        /* 2. KHAI BÁO BIẾN MÀU - CHẾ ĐỘ TỐI LUXURY (Giữ nguyên hoặc tinh chỉnh nhẹ) */
+        body.dark-mode {
+            --bg-main: #0a0a0a;
+            --bg-card: #151515;
+            --text-main: #f5f5f5;
+            --text-muted: #aaaaaa;
+            --border-color: #333333;
+            --primary-red: #e50914; /* Màu đỏ rực mặc định của chế độ tối */
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            /* Màu riêng cho nút chuyển theme ở chế độ tối */
+            --toggle-bg: #2a2a2a;
+            --toggle-color: #ffffff;
+        }
+
+        /* 3. ÁP DỤNG BIẾN VÀO GIAO DIỆN CHUNG */
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--bg-dark);
+            background-color: var(--bg-main);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* THANH ĐIỀU HƯỚNG SANG CHẢNH CHUẨN DARK THEME */
         .luxury-navbar {
             background-color: var(--bg-card);
             padding: 15px 50px;
@@ -35,7 +56,8 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--primary-red);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: 0.4s ease;
         }
 
         .navbar-brand {
@@ -57,37 +79,58 @@
             padding: 0;
             display: flex;
             gap: 30px;
+            align-items: center;
         }
 
             .nav-links a {
                 color: var(--text-muted);
                 text-decoration: none;
-                font-size: 14px;
+                font-size: 13px;
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 1px;
-                transition: color 0.3s ease;
+                transition: 0.3s;
             }
 
                 .nav-links a:hover {
                     color: var(--primary-red);
                 }
 
-        /* KHU VỰC CHỨA NỘI DUNG CHÍNH CỦA CÁC TRANG VIEW */
+        /* Nút Tắt/Bật Giao diện: Cập nhật style nút */
+        .btn-theme-toggle {
+            background: var(--toggle-bg);
+            border: none;
+            color: var(--toggle-color);
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Inter';
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+            .btn-theme-toggle:hover {
+                background: var(--primary-red);
+                color: #fff;
+            }
+
         .main-content {
             flex: 1;
             padding: 40px 20px;
-            background-image: radial-gradient(circle at top, #1a1a1a 0%, #0a0a0a 70%);
         }
 
-        /* PHẦN CHÂN TRANG ĐỒ ÁN */
         .luxury-footer {
             background-color: var(--bg-card);
             text-align: center;
             padding: 20px;
-            border-top: 1px solid #222;
+            border-top: 1px solid var(--border-color);
             color: var(--text-muted);
-            font-size: 13px;
+            font-size: 12px;
+            transition: 0.4s ease;
         }
 
             .luxury-footer span {
@@ -101,9 +144,10 @@
     <header class="luxury-navbar">
         <a href="/Home/Index" class="navbar-brand">OS <span>SIMULATOR</span></a>
         <ul class="nav-links">
-            <li><a href="/Home/Index">Mô Phỏng Quantum</a></li>
+            <li><a href="/Home/Index">Mô Phỏng</a></li>
             <li><a href="/Home/LyThuyet">Lý Thuyết</a></li>
             <li><a href="/Home/Quiz">Trắc Nghiệm</a></li>
+            <li><button class="btn-theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙 Dark Mode</button></li>
         </ul>
     </header>
 
@@ -112,9 +156,36 @@
     </main>
 
     <footer class="luxury-footer">
-        &copy; 2026 - Đồ Án Môn Hệ Điều Hành - <span>Thực hiện bởi Nhóm của Hùng và Hưng</span>
+        &copy; 2026 - Đồ Án Môn Hệ Điều Hành - <span>Thực hiện bởi Nhóm của bạn</span>
     </footer>
 
+    <script>
+        const body = document.body;
+        const themeBtn = document.getElementById('themeBtn');
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('os_theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeBtn.innerHTML = '☀️ Light Mode';
+            } else {
+                body.classList.remove('dark-mode');
+                themeBtn.innerHTML = '🌙 Dark Mode';
+            }
+        }
+
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('os_theme', 'dark');
+                themeBtn.innerHTML = '☀️ Light Mode';
+            } else {
+                localStorage.setItem('os_theme', 'light');
+                themeBtn.innerHTML = '🌙 Dark Mode';
+            }
+        }
+        loadTheme();
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

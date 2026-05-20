@@ -1,95 +1,173 @@
 ﻿@{
-    ViewData["Title"] = "Lý Thuyết Round Robin";
+    ViewData["Title"] = "Cơ Sở Lý Thuyết - OS Simulator";
 }
 
 <style>
-    .theory-container {
-        max-width: 900px;
-        margin: 30px auto;
-        background: #1e1e1e;
-        padding: 40px 50px;
-        border-radius: 12px;
-        box-shadow: 0 15px 35px rgba(229, 9, 20, 0.15);
-        border-top: 4px solid #e50914;
-        line-height: 1.7;
+    /* 1. KHAI BÁO BIẾN MÀU - CẬP NHẬT CHẾ ĐỘ SÁNG PROFESSIONAL (MẶC ĐỊNH) */
+    :root {
+        --bg-main: #f8f9fa; /* Xám trắng tinh tế, dịu hơn */
+        --bg-card: #ffffff;
+        --text-main: #212529; /* Đen xám dễ đọc */
+        --text-muted: #495057; /* Xám đậm cho nội dung phụ */
+        --border-color: #dee2e6;
+        --primary-red: #c2185b; /* MÀU MỚI: Đỏ mận, sang trọng và dịu mắt trên nền sáng */
+        --shadow-color: rgba(0, 0, 0, 0.05); /* Bóng cực nhẹ */
+        /* Màu riêng cho công thức mã ở chế độ sáng */
+        --formula-bg: #212529; /* Nền tối nhẹ hơn */
+        --formula-green: #2ecc71; /* Màu xanh lá mã */
+        --formula-gray: #aaaaaa; /* Màu xám mã */
     }
 
-        .theory-container h2 {
-            color: #e50914;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 40px;
-            text-align: center;
+    /* 2. KHAI BÁO BIẾN MÀU - CHẾ ĐỘ TỐI LUXURY (Giữ nguyên) */
+    body.dark-mode {
+        --bg-main: #0a0a0a;
+        --bg-card: #151515;
+        --text-main: #f5f5f5;
+        --text-muted: #aaaaaa;
+        --border-color: #333333;
+        --primary-red: #e50914; /* Màu đỏ rực của chế độ tối */
+        --shadow-color: rgba(0, 0, 0, 0.5);
+        /* Màu riêng cho công thức mã ở chế độ tối */
+        --formula-bg: #111;
+        --formula-green: #2ecc71;
+        --formula-gray: #ccc;
+    }
+
+    /* 3. ÁP DỤNG BIẾN VÀO GIAO DIỆN KHUNG LÝ THUYẾT */
+    .theory-container {
+        max-width: 900px;
+        margin: 20px auto;
+        background-color: var(--bg-card);
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 15px 35px var(--shadow-color);
+        border-top: 4px solid var(--primary-red); /* Viền mận dịu hơn */
+        transition: 0.4s ease;
+    }
+
+    .theory-title {
+        text-align: center;
+        color: var(--primary-red);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .theory-section-title {
+        color: var(--primary-red);
+        font-size: 16px;
+        font-weight: 700;
+        margin-top: 25px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        /* Viền đỏ mận bên trái tiêu đề mục */
+        .theory-section-title::before {
+            content: '';
+            display: inline-block;
+            width: 3px;
+            height: 16px;
+            background-color: var(--primary-red);
         }
 
-        .theory-container h3 {
-            color: #fff;
-            border-left: 4px solid #e50914;
-            padding-left: 15px;
-            margin-top: 40px;
-            font-size: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+    .theory-content {
+        color: var(--text-main);
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    .theory-list {
+        color: var(--text-main);
+        font-size: 14px;
+        line-height: 1.6;
+        list-style: none;
+        padding-left: 15px;
+    }
+
+        .theory-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
         }
 
-        .theory-container p, .theory-container li {
-            color: #cccccc;
-            font-size: 15px;
-            margin-bottom: 15px;
-        }
+            /* Chấm tròn đỏ mận cho danh sách */
+            .theory-list li::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 7px;
+                width: 6px;
+                height: 6px;
+                background-color: var(--primary-red);
+                border-radius: 50%;
+            }
 
-        .theory-container ul {
-            margin-bottom: 25px;
-        }
+    /* GIAO DIỆN CÔNG THỨC MÃ MỚI - HỢP MẮT HƠN */
+    .formula-code-box {
+        background-color: var(--formula-bg);
+        padding: 20px;
+        border-radius: 6px;
+        font-family: 'Consolas', monospace;
+        font-size: 13px;
+        color: var(--formula-gray);
+        margin-bottom: 30px;
+        border: 1px dashed var(--border-color);
+        transition: 0.4s ease;
+    }
 
-    .highlight {
-        color: #e50914;
+    .formula-keyword {
+        color: var(--primary-red);
         font-weight: bold;
     }
 
-    .formula-box {
-        background: #151515;
-        padding: 20px;
-        border-radius: 8px;
-        border: 1px solid #333;
-        text-align: center;
-        margin: 20px 0;
+    .formula-result {
+        color: var(--formula-green);
     }
 
-        .formula-box code {
-            color: #ffcccc;
-            font-size: 16px;
-            font-family: Consolas, monospace;
-        }
+    .formula-divider {
+        color: var(--formula-gray);
+        margin: 0 5px;
+    }
+
 </style>
 
 <div class="theory-container">
-    <h2>Cơ Sở Lý Thuyết: Thuật Toán Round Robin</h2>
+    <h2 class="theory-title">Cơ sở lý thuyết: Thuật toán Round Robin</h2>
 
-    <h3>1. Giới thiệu chung</h3>
-    <p>Thuật toán định thời <strong>Round Robin (RR)</strong> là một trong những thuật toán phân phối CPU phổ biến và công bằng nhất, được thiết kế đặc biệt cho các hệ thống đa nhiệm chia sẻ thời gian (time-sharing systems).</p>
-    <p>Nguyên lý hoạt động của nó tương tự như thuật toán FCFS (Vào trước - Ra trước) nhưng được bổ sung thêm tính năng <span class="highlight">trưng dụng (preemption)</span> để Hệ điều hành có thể luân chuyển quyền sử dụng CPU liên tục giữa các tiến trình.</p>
+    <div class="theory-section-title">1. Giới thiệu chung</div>
+    <p class="theory-content">
+        Thuật toán định thời <span class="theory-highlight">Round Robin (RR)</span> là một trong những thuật toán phân phối CPU phổ biến và công bằng nhất, được thiết kế đặc biệt cho các hệ thống đa nhiệm chia sẻ thời gian (time-sharing systems).
+        Nguyên lý hoạt động của nó tương tự như thuật toán FCFS (Vào trước - Ra trước) nhưng được bổ sung thêm tính năng <span class="theory-highlight red">trưng dụng (preemption)</span> để Hệ điều hành có thể luân chuyển quyền sử dụng CPU liên tục giữa các tiến trình.
+    </p>
 
-    <h3>2. Lát cắt thời gian (Time Quantum) là gì?</h3>
-    <p>Hệ điều hành sẽ định nghĩa một định mức thời gian nhỏ gọi là <span class="highlight">Time Quantum (q)</span> (thường dao động từ 10 đến 100 mili-giây). Danh sách các tiến trình cần xử lý sẽ được sắp xếp thành một vòng tròn.</p>
-    <ul>
+    <div class="theory-section-title">2. Lát cắt thời gian (Time Quantum) là gì?</div>
+    <p class="theory-content">
+        Hệ điều hành sẽ định nghĩa một định mức thời gian nhỏ gọi là <span class="theory-highlight red">Time Quantum (q)</span> (thường dao động từ 10 đến 100 mili-giây). Danh sách các tiến trình cần xử lý sẽ được sắp xếp thành một vòng tròn.
+    </p>
+    <ul class="theory-list">
         <li>Bộ điều phối CPU sẽ đi vòng quanh hàng đợi, cấp phát CPU cho mỗi tiến trình chạy trong một khoảng thời gian tối đa bằng đúng 1 Quantum.</li>
-        <li>Nếu tiến trình có thời gian cần chạy (Burst Time) <strong>nhỏ hơn</strong> 1 Quantum: Nó sẽ tự động nhả CPU ra ngay khi hoàn thành sớm.</li>
-        <li>Nếu tiến trình có Burst Time <strong>lớn hơn</strong> 1 Quantum: Hết thời gian cho phép, Hệ điều hành sẽ tước quyền CPU của nó, đẩy nó về cuối hàng đợi và chuyển CPU cho tiến trình tiếp theo.</li>
+        <li>Nếu tiến trình có thời gian cần chạy (Burst Time) <span class="theory-highlight">nhỏ hơn 1 Quantum</span>: Nó sẽ tự động nhả CPU ra ngay khi hoàn thành sớm.</li>
+        <li>Nếu tiến trình có Burst Time <span class="theory-highlight">lớn hơn 1 Quantum</span>: Hết thời gian cho phép, Hệ điều hành sẽ tước quyền CPU của nó, đẩy nó về cuối hàng đợi và chuyển CPU cho tiến trình tiếp theo.</li>
     </ul>
 
-    <h3>3. Các công thức đánh giá hiệu năng</h3>
-    <p>Để đánh giá mức độ hiệu quả của việc điều phối, chúng ta sử dụng hai thông số chính:</p>
+    <div class="theory-section-title">3. Các công thức đánh giá hiệu năng</div>
+    <p class="theory-content">Để đánh giá mức độ hiệu quả của việc điều phối, chúng ta sử dụng hai thông số chính:</p>
 
-    <div class="formula-box">
-        <code>Thời Gian Hoàn Thành (Turnaround Time) = Thời điểm hoàn thành - Thời điểm xuất hiện</code><br /><br />
-        <code>Thời Gian Chờ (Waiting Time) = Thời Gian Hoàn Thành - Thời Gian Chạy (Burst Time)</code>
+    <div class="formula-code-box">
+        <span class="formula-keyword">Thời Gian Hoàn Thành (Turnaround Time)</span> = Thời điểm hoàn thành - Arrival Time (Thời điểm xuất hiện)<br />
+        <span class="formula-keyword">Thời Gian Chờ (Waiting Time)</span> = Turnaround Time - Burst Time (Thời gian chạy)<br />
     </div>
 
-    <h3>4. Đánh giá ưu và nhược điểm</h3>
-    <ul>
-        <li><span class="highlight">Ưu điểm:</span> Đảm bảo tính công bằng cao, không có tiến trình nào bị "bỏ đói" (starvation) vì mọi tiến trình đều chắc chắn được cấp CPU theo chu kỳ. Rất phù hợp với hệ thống tương tác trực tiếp.</li>
-        <li><span class="highlight">Nhược điểm:</span> Hiệu suất phụ thuộc cực lớn vào việc chọn giá trị <strong>Time Quantum</strong>. Nếu Quantum quá lớn, RR sẽ bị biến thành FCFS. Nếu Quantum quá nhỏ, CPU sẽ tốn rất nhiều thời gian vô ích chỉ để chuyển đổi ngữ cảnh (Context Switch) giữa các tiến trình.</li>
-    </ul>
+    <div class="theory-section-title">4. Đánh giá ưu và nhược điểm</div>
+    <p class="theory-content">
+        <span class="theory-highlight red">Ưu điểm:</span> Đảm bảo tính công bằng cao, không có tiến trình nào bị "bỏ đói" (starvation) vì mọi tiến trình đều chắc chắn được cấp CPU theo chu kỳ. Rất phù hợp với hệ thống tương tác trực tiếp.
+        <br />
+        <span class="theory-highlight red">Nhược điểm:</span> Hiệu suất phụ thuộc cực lớn vào việc chọn giá trị Time Quantum. Nếu Quantum quá lớn, RR sẽ bị biến thành FCFS. Nếu Quantum quá nhỏ, CPU sẽ tốn rất nhiều thời gian vô ích chỉ để chuyển đổi ngữ cảnh (Context Switch) giữa các tiến trình.
+    </p>
 </div>

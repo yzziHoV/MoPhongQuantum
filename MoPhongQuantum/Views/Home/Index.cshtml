@@ -1,32 +1,29 @@
 ﻿@{
     ViewData["Title"] = "Thiết Lập Mô Phỏng";
 }
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
-    body {
-        background-color: #121212;
-        color: #f5f5f5;
-    }
-
+    /* ÁP DỤNG BIẾN CSS MỚI ĐỂ ĐỒNG BỘ */
     .luxury-container {
         max-width: 650px;
-        margin: 50px auto;
-        background: #1e1e1e;
+        margin: 20px auto;
+        background: var(--bg-card);
         padding: 40px;
         border-radius: 12px;
-        box-shadow: 0 15px 35px rgba(229, 9, 20, 0.15);
-        border-top: 4px solid #e50914;
+        box-shadow: 0 15px 35px var(--shadow-color);
+        border-top: 4px solid var(--primary-red);
+        transition: 0.4s ease;
     }
 
     h2 {
         text-align: center;
-        color: #e50914;
+        color: var(--primary-red);
         font-weight: bold;
         text-transform: uppercase;
         letter-spacing: 2px;
         margin-bottom: 30px;
+        font-size: 20px;
     }
 
     .form-group {
@@ -37,54 +34,65 @@
         display: block;
         margin-bottom: 10px;
         font-weight: 600;
-        color: #ccc;
+        color: var(--text-muted);
         letter-spacing: 1px;
-        font-size: 14px;
+        font-size: 13px;
     }
 
     input[type="number"] {
         width: 100%;
         padding: 14px;
-        background: #2a2a2a;
-        border: 1px solid #444;
-        color: #fff;
+        background: var(--bg-main);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
         border-radius: 6px;
         box-sizing: border-box;
         transition: 0.3s;
+        font-family: 'Inter';
+        font-size: 14px;
     }
 
         input[type="number"]:focus {
-            border-color: #e50914;
+            border-color: var(--primary-red);
             outline: none;
-            box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.1);
+        }
+
+        /* Set màu cho chữ placeholder để nó dịu đi ở chế độ sáng */
+        input[type="number"]::placeholder {
+            color: #aaaaaa;
         }
 
     .btn-submit {
         width: 100%;
         padding: 16px;
-        background: linear-gradient(135deg, #e50914, #b20710);
+        background: var(--primary-red);
         color: white;
         border: none;
         border-radius: 6px;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: bold;
         cursor: pointer;
         text-transform: uppercase;
         transition: 0.3s;
         margin-top: 20px;
+        letter-spacing: 1px;
     }
 
         .btn-submit:hover {
+            filter: brightness(1.1);
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(229, 9, 20, 0.4);
+            box-shadow: 0 8px 20px var(--shadow-color);
         }
 
     #process-container {
         margin-top: 20px;
         padding: 20px;
-        background: #151515;
+        background: var(--bg-main);
         border-radius: 8px;
-        border-left: 3px solid #e50914;
+        border-left: 3px solid var(--primary-red);
+        transition: 0.4s ease;
+        border: 1px solid var(--border-color);
     }
 
     .process-row {
@@ -97,8 +105,9 @@
         .process-row label {
             margin-bottom: 0;
             min-width: 60px;
-            color: #e50914;
+            color: var(--primary-red);
             font-weight: bold;
+            font-size: 14px;
         }
 </style>
 
@@ -116,7 +125,7 @@
         </div>
 
         <div id="process-container">
-            <p style="color: #666; font-style: italic; margin: 0;">Nhập số lượng tiến trình để thiết lập thông số...</p>
+            <p style="color: var(--text-muted); font-style: italic; margin: 0; font-size: 13px; text-align:center;">Nhập số lượng tiến trình để thiết lập thông số...</p>
         </div>
 
         <button type="button" class="btn-submit" onclick="validateAndSubmit()">Khởi Động Mô Phỏng</button>
@@ -129,7 +138,7 @@
         const container = document.getElementById('process-container');
 
         if(n > 0 && n <= 10) {
-            container.innerHTML = '<div style="display:flex; gap:15px; margin-bottom:15px; color:#aaa; font-size:12px; text-transform:uppercase;"> <div style="flex:1">Arrival Time (TG Đến)</div> <div style="flex:1">Burst Time (TG Chạy)</div> </div>';
+            container.innerHTML = '<div style="display:flex; gap:15px; margin-bottom:15px; color:var(--text-muted); font-size:11px; text-transform:uppercase; font-weight:bold;"> <div style="flex:1">Arrival Time (TG Đến)</div> <div style="flex:1">Burst Time (TG Chạy)</div> </div>';
             for(let i = 0; i < n; i++) {
                 container.innerHTML += `
                     <div class="process-row">
@@ -140,21 +149,25 @@
                 `;
             }
         } else {
-            container.innerHTML = '<p style="color: #666; font-style: italic; margin: 0;">Số lượng tiến trình hợp lệ từ 1 đến 10.</p>';
+            container.innerHTML = '<p style="color: var(--text-muted); font-style: italic; margin: 0; font-size: 13px; text-align:center;">Số lượng tiến trình hợp lệ từ 1 đến 10.</p>';
         }
     }
 
-    // Hàm bắt lỗi bằng SweetAlert2 phong cách sang chảnh
     function validateAndSubmit() {
         const n = parseInt(document.getElementById('soTienTrinh').value);
         const q = parseInt(document.getElementById('quantum').value);
 
+        // Lấy màu nền chủ đạo mới để confirm SweetAlert2
+        const isDark = document.body.classList.contains('dark-mode');
+        const swalBg = isDark ? '#1e1e1e' : '#ffffff';
+        const swalColor = isDark ? '#ffffff' : '#1a1a1a';
+
         if(isNaN(n) || n < 1 || n > 10) {
-            Swal.fire({ background: '#1e1e1e', color: '#fff', icon: 'error', title: 'Lỗi Dữ Liệu', text: 'Số lượng tiến trình phải từ 1 đến 10!', confirmButtonColor: '#e50914' });
+            Swal.fire({ background: swalBg, color: swalColor, icon: 'error', title: 'Lỗi Dữ Liệu', text: 'Số lượng tiến trình phải từ 1 đến 10!', confirmButtonColor: '#e50914' });
             return;
         }
         if(isNaN(q) || q < 1) {
-            Swal.fire({ background: '#1e1e1e', color: '#fff', icon: 'error', title: 'Lỗi Dữ Liệu', text: 'Time Quantum phải lớn hơn 0!', confirmButtonColor: '#e50914' });
+            Swal.fire({ background: swalBg, color: swalColor, icon: 'error', title: 'Lỗi Dữ Liệu', text: 'Time Quantum phải lớn hơn 0!', confirmButtonColor: '#e50914' });
             return;
         }
 
@@ -162,7 +175,7 @@
         let btInputs = document.querySelectorAll('.bt-input');
         for(let i = 0; i < atInputs.length; i++) {
             if(atInputs[i].value === '' || btInputs[i].value === '' || parseInt(btInputs[i].value) < 1 || parseInt(atInputs[i].value) < 0) {
-                Swal.fire({ background: '#1e1e1e', color: '#fff', icon: 'warning', title: 'Thiếu Dữ Liệu', text: 'Burst Time phải >= 1 và Arrival Time phải >= 0', confirmButtonColor: '#e50914' });
+                Swal.fire({ background: swalBg, color: swalColor, icon: 'warning', title: 'Thiếu Dữ Liệu', text: 'Burst Time phải >= 1 và Arrival Time phải >= 0', confirmButtonColor: '#e50914' });
                 return;
             }
         }
