@@ -1,6 +1,6 @@
 # 🚀 OS Simulator - Round Robin Scheduling
 
-Đây là dự án Web Application mô phỏng thuật toán điều phối CPU **Round Robin (RR)**, được thiết kế với giao diện Dark Theme hiện đại và các hiệu ứng trực quan sinh động. Dự án phục vụ cho việc học tập, nghiên cứu và báo cáo môn Hệ Điều Hành.
+Đây là dự án Web Application mô phỏng thuật toán điều phối CPU **Round Robin (RR)**. Dự án được thiết kế chuẩn mực với giao diện hiện đại, tập trung mạnh vào Trải nghiệm người dùng (UX/UI) và trực quan hóa dữ liệu, phục vụ hoàn hảo cho việc học tập, nghiên cứu và báo cáo môn Hệ Điều Hành.
 
 ## ✨ Tính năng nổi bật (Features)
 
@@ -10,6 +10,7 @@
 * **🛡️ Bẫy lỗi thông minh:** Validate dữ liệu đầu vào (Arrival Time, Burst Time, Quantum) nghiêm ngặt với giao diện cảnh báo `SweetAlert2`.
 * **📖 Gia sư ảo (Solution Guide):** Tự động sinh ra bảng giải thích chi tiết từng bước áp dụng công thức toán học.
 * **📝 Hệ thống Trắc nghiệm (Mini Quiz):** Ngân hàng câu hỏi xáo trộn ngẫu nhiên giúp sinh viên ôn tập lý thuyết hệ điều hành, lệnh Linux, và lập trình C (fork, wait).
+* **🎨 Giao diện Kép (Dark/Light Mode):** Tích hợp tính năng chuyển đổi Sáng/Tối mượt mà thông qua CSS Variables và lưu trữ trạng thái người dùng bằng `localStorage`. Tông màu được thiết kế tỉ mỉ (Đỏ mận sang trọng cho Sáng, Đỏ rực rỡ cho Tối) giúp chống mỏi mắt.
 
 ## 🛠️ Công nghệ sử dụng (Tech Stack)
 
